@@ -39,12 +39,26 @@ namespace TodoManager.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+            else
+            {
+                // Log the model state errors
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+                return View(todo);
         }
 
-        public IActionResult Edit()
+        // GET: Todo/Edit/5
+        public IActionResult Edit(int id)
         {
-            return View();
+            var todo = _context.TodoItems.Find(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+            return View(todo);
         }
 
         public IActionResult Delete()

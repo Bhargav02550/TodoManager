@@ -1,6 +1,55 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-	ViewData["Title"] = "Edit Todo";
+﻿@{
+    ViewData["Title"] = "Edit Todo";
 }
+
+@model TodoManager.Models.Todo
+
+<h2 class="font-bold text-xl">Update Todo</h2>
+
+<form asp-controller="Edit" asp-action="Edit" method="post" class="flex flex-col w-1/2 gap-4">
+    <input type="hidden" asp-for="Id" />
+
+    <label>Title</label>
+    <input asp-for="Title" class="p-2 border border-gray-300 rounded outline-none" />
+    <span asp-validation-for="Title" class="text-red-500 text-sm"></span>
+
+    <label>Description</label>
+    <textarea asp-for="Description" rows="4"
+              class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-200 resize-none">
+    </textarea>
+    <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
+
+    <label>Priority</label>
+    <select asp-for="Priority" class="p-2 border border-gray-300 rounded outline-none">
+        <option value="">Select Priority</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+		<option value="None">None</option>
+    </select>
+    <span asp-validation-for="Priority" class="text-red-500 text-sm"></span>
+    <div>
+
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Save Changes</button>
+        <button type="button" onclick="deleteTodo(@Model.Id)" class="bg-red-500 text-white p-2 rounded-md">Delete</button>
+    </div>
+</form>
+
+<script>
+    async function deleteTodo(id) {
+        if (confirm("Are you sure you want to delete this todo?")) {
+            const response = await fetch(`/Edit/Delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = '/Todo';
+            } else {
+                alert('Failed to delete the todo.');
+            }
+        }
+    }
+</script>

@@ -1,42 +1,139 @@
-﻿@model IEnumerable<TodoManager.Models.Todo>
+﻿@* @model IEnumerable<TodoManager.Models.Todo> *@
+
+@* @{ *@
+@*     ViewData["Title"] = "Todo List"; *@
+@* } *@
+
+@* <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> *@
+@*     @foreach (var item in Model) *@
+@*     { *@
+@*         string priorityClass = item.Priority switch *@
+@*         { *@
+@*             "High" => "bg-red-200", *@
+@*             "Medium" => "bg-yellow-200", *@
+@*             "Low" => "bg-green-200", *@
+@*             _ => "bg-gray-200" *@
+@*         }; *@
+
+@*         <div class="bg-gray-100 border p-2 @priorityClass flex-column h-auto masonry-item"> *@
+@*             <div class="flex flex-row justify-between gap-2"> *@
+@*                 <h2 class="text-2xl font-semibold" style="font-family: 'PP Pangaia', sans-serif"> *@
+@*                     @item.Title *@
+@*                 </h2> *@
+@*                 <div class="cursor-pointer font-bold" onclick="location.href='@Url.Action("Edit","Todo",new {id = item.Id})'"> *@
+@*                     Edit *@
+@*                 </div> *@
+@*             </div> *@
+@*             <hr class="my-2 border-t-1 border-black" /> *@
+@*             <p class="text-black-600 text-md font-semibold"> *@
+@*                 @item.Description *@
+@*             </p> *@
+@*         </div> *@
+@*     } *@
+@* </div> *@
+
+@model IEnumerable<TodoManager.Models.Todo>
 
 @{
 	ViewData["Title"] = "Todo List";
 }
 
-@* <div class="bg-black text-white p-2 rounded-2"> *@
-@* 	<h1>This is Bhargav from TODO Manager</h1> *@
-@* </div> *@
+<div class="flex flex-row justify-end">
+	<input type="text" placeholder="Search by Title" class="p-2 border border-gray my-2 w-1/4 outline-none search" oninput="findTodos()"/>
+</div>
 
+<div class="masonry">
+	@foreach (var item in Model)
+	{
+		string priorityClass = item.Priority switch
+		{
+			"High" => "bg-red-200",
+			"Medium" => "bg-yellow-200",
+			"Low" => "bg-green-200",
+			_ => "bg-gray-200"
+		};
 
-<div>
+		string priorityText = item.Priority switch
+		{
+			"High" => "text-red-600",
+			"Medium" => "text-yellow-600",
+			"Low" => "text-green-600",
+			_ => "text-gray-600"
+		};
 
-    @{
-    ViewData["Title"] = "Todo List";
-    }
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    @foreach(var item in Model)
-    {
-			string priorityClass = item.Priority switch
-			{
-				"High" => "bg-red-200",
-				"Medium" => "bg-yellow-200",
-				"Low" => "bg-green-200",
-				_ => "bg-gray-200"
-			};
-		<div class="bg-gray-100 border p-2 @priorityClass flex-column">
-			<div class="flex flex-row justify-between">
-					<h2 class="text-2xl font-semibold" style="font-family: 'PP Pangaia', sans-serif">
-						@item.Title
-					</h2>
-					
+		<div class="bg-gray-100 border p-2 @priorityClass flex-column h-auto masonry-item todo-item">
+			<div class="flex flex-row justify-between gap-2">
+				<h2 class="text-2xl font-semibold title" style="font-family: 'PP Pangaia', sans-serif">
+					@item.Title
+				</h2>
+				<div class="cursor-pointer font-bold" onclick="location.href='@Url.Action("Edit","Todo",new {id = item.Id})'">
+					Edit
+				</div>
 			</div>
-				<hr class="my-2 border-t-1 border-black" />
-				<p class="text-black-600 text-md font-semibold">
-					@item.Description
-				</p>
+			<div class="flex justify-between mt-2">
+				<span class="text-sm @priorityText">Priority: @item.Priority</span>
+				<span class="text-sm text-black">@item.CreatedAt.ToString("dd/MM/yyyy")</span>
+			</div>
+			<hr class="my-2 border-t-1 border-black" />
+			<p class="text-black-600 text-md font-semibold">
+				@item.Description
+			</p>
 
 		</div>
-    }
-    </div>
+	}
+</div>
+
+<script>
+	function findTodos(){
+
+		// console.log("function called");
+		const input =document.getElementsByClassName("search")[0].value.toLowerCase();
+		// console.log(input);
+		const items = document.querySelectorAll(".todo-item");
+
+		items.forEach(item => {
+			const title = item.querySelector(".title").textContent.toLowerCase();
+			item.style.display = title.includes(input) ? 'block' : 'none';
+		})
+
+	}
+</script>
+
+<style>
+	.masonry {
+		column-count: 4;
+		column-gap: 16px;
+	}
+
+	.masonry-item {
+		break-inside: avoid-column;
+		margin-bottom: 16px;
+		padding: 16px;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+		.masonry-item:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+		}
+
+	@@media (max-width: 1024px) {
+
+		.masonry {
+			column-count: 3;
+		}
+	}
+
+	@@media (max-width: 768px) {
+		.masonry {
+			column-count: 2;
+		}
+	}
+
+	@@media (max-width: 640px) {
+		.masonry {
+			column-count: 1;
+		}
+	}
+</style>
+

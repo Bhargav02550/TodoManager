@@ -1,34 +1,31 @@
 ﻿@{
-	ViewData["Title"] = "Create Todo";
+    ViewData["Title"] = "Create Todo";
 }
 
 @model TodoManager.Models.Todo
 
-<style>
-
-</style>
-
 <div class="m-2">
-	<h1 class="text-xl font-bold mb-4">Create a Todo</h1>
+    <h1 class="text-xl font-bold mb-4">Create a Todo</h1>
     <form asp-action="Create" method="post" class="flex flex-col w-1/2 gap-4">
         <input asp-for="Title" placeholder="Please enter the title"
-               class="p-2 border border-gray-300 rounded outline-none" />
+               class="p-2 border border-gray-400 outline-none" />
         <span asp-validation-for="Title" class="text-red-500 text-sm"></span>
 
         <textarea asp-for="Description" rows="4" placeholder="Enter your notes..."
-                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-200 resize-none">
-    </textarea>
+                  class="w-full p-3 border border-gray-400 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-200 resize-none">
+        </textarea>
         <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
 
-        <select asp-for="Priority" class="p-2 border border-gray-300 rounded outline-none">
+        <select asp-for="Priority" class="p-2 border border-gray-400 bg-white text-gray-800 outline-none">
             <option value="">Select Priority</option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
+            <option value="None">None</option>
         </select>
-        <span asp-validation-for="Priority" class="text-red-500 text-sm"></span>
+
+        @* <span asp-validation-for="Priority" class="text-red-500 text-sm"></span> *@
 
         <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Add Todo</button>
     </form>
-
 </div>
