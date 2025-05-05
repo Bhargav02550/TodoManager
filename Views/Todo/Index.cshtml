@@ -1,0 +1,42 @@
+﻿@model IEnumerable<TodoManager.Models.Todo>
+
+@{
+	ViewData["Title"] = "Todo List";
+}
+
+@* <div class="bg-black text-white p-2 rounded-2"> *@
+@* 	<h1>This is Bhargav from TODO Manager</h1> *@
+@* </div> *@
+
+
+<div>
+
+    @{
+    ViewData["Title"] = "Todo List";
+    }
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    @foreach(var item in Model)
+    {
+			string priorityClass = item.Priority switch
+			{
+				"High" => "bg-red-200",
+				"Medium" => "bg-yellow-200",
+				"Low" => "bg-green-200",
+				_ => "bg-gray-200"
+			};
+		<div class="bg-gray-100 border p-2 @priorityClass flex-column">
+			<div class="flex flex-row justify-between">
+					<h2 class="text-2xl font-semibold" style="font-family: 'PP Pangaia', sans-serif">
+						@item.Title
+					</h2>
+					
+			</div>
+				<hr class="my-2 border-t-1 border-black" />
+				<p class="text-black-600 text-md font-semibold">
+					@item.Description
+				</p>
+
+		</div>
+    }
+    </div>

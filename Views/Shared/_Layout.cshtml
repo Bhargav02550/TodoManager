@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - TodoManager</title>
+
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = {
+		theme: {
+		extend: {
+		fontFamily: {
+		raleway: ['Raleway', 'sans-serif'],
+		}
+		}
+		}
+		}
+	</script>
+
+	<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet">
+	<link href="https://fonts.cdnfonts.com/css/pp-pangaia" rel="stylesheet">
+
+
+</head>
+<body class="font-raleway bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+	<header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+			<a href="/" class="text-xl font-bold text-blue-600">TodoManager</a>
+
+			@if (Context.Request.Path != Url.Action("Create", "Todo"))
+			{
+				<a href="@Url.Action("Create", "Todo")" class="bg-blue-300 text-black p-2 border border-black outline-black hover:bg-blue-400 transition ease-in duration-200">
+					Create new TODO
+				</a>
+			}
+		</div>
+	</header>
+
+
+	<main role="main" class="flex-grow container mx-auto px-4 py-6">
+		@RenderBody()
+	</main>
+
+	@* <footer class="bg-white border-t mt-auto py-4 text-center text-sm text-gray-500"> *@
+	@*     &copy; @DateTime.Now.Year - TodoManager *@
+	@* </footer> *@
+
+	<!-- Optional Scripts -->
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
