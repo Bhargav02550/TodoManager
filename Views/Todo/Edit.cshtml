@@ -6,21 +6,21 @@
 
 <h2 class="font-bold text-xl">Update Todo</h2>
 
-<form asp-controller="Edit" asp-action="Edit" method="post" class="flex flex-col w-1/2 gap-4">
+<form asp-controller="Edit" asp-action="Edit" method="post" class="flex flex-col w-full gap-4 lg:w-1/2">
     <input type="hidden" asp-for="Id" />
 
     <label>Title</label>
-    <input asp-for="Title" class="p-2 border border-gray-300 rounded outline-none" />
+    <input asp-for="Title" class="p-2 border border-gray-400 outline-none" />
     <span asp-validation-for="Title" class="text-red-500 text-sm"></span>
 
     <label>Description</label>
     <textarea asp-for="Description" rows="4"
-              class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-200 resize-none">
+              class="w-full p-3 border border-gray-400 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-200 resize-none">
     </textarea>
     <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
 
     <label>Priority</label>
-    <select asp-for="Priority" class="p-2 border border-gray-300 rounded outline-none">
+    <select asp-for="Priority" class="p-2 border border-gray-400 outline-none">
         <option value="">Select Priority</option>
         <option value="High">High</option>
         <option value="Medium">Medium</option>
@@ -30,8 +30,9 @@
     <span asp-validation-for="Priority" class="text-red-500 text-sm"></span>
     <div>
 
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Save Changes</button>
-        <button type="button" onclick="deleteTodo(@Model.Id)" class="bg-red-500 text-white p-2 rounded-md">Delete</button>
+            <button type="submit" class="bg-blue-300 p-2 border border-black text-black hover:bg-blue-400 transtion ease-in duration-200">Save Changes</button>
+        
+            <button type="button" onclick="deleteTodo(@Model.Id)" class="bg-red-300 p-2 border border-black text-black hover:bg-red-400 ease-in duration-200">Delete</button>
     </div>
 </form>
 
@@ -52,4 +53,21 @@
             }
         }
     }
+
+	async function updateTodo() {
+		const form = document.querySelector('form');
+		const formData = new FormData(form);
+		const response = await fetch(form.action, {
+			method: 'POST',
+			body: formData,
+			headers: {
+				'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+			}
+		});
+		if (response.ok) {
+			window.location.href = '/Todo';
+		} else {
+			alert('Failed to update the todo.');
+		}
+	}
 </script>

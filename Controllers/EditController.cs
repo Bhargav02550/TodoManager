@@ -2,6 +2,7 @@
 using TodoManager.Data;
 using TodoManager.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace TodoManager.Controllers
 {
@@ -25,12 +26,18 @@ namespace TodoManager.Controllers
             {
                 return NotFound();
             }
+            var existing = await _context.TodoItems.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+            if (existing == null) return NotFound();
+
+            todo.CreatedAt = existing.CreatedAt;
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    todo.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     todo.UpdatedAt = DateTime.UtcNow;
+
                     _context.Update(todo);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "Todo");

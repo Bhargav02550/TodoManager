@@ -1,4 +1,7 @@
-﻿namespace TodoManager.Models
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace TodoManager.Models
 {
     public class Todo
     {
@@ -8,6 +11,8 @@
         public string Priority { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public string? UserId { get; set; }
 
     }
 }

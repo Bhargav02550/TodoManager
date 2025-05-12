@@ -1,0 +1,17 @@
+﻿@model TodoManager.Models.LoginViewModel
+
+@{
+	ViewData["Title"] = "Login";
+}
+<div class="m-2">
+	<h1 class="text-xl font-bold mb-4">Login</h1>
+	<form asp-action="Login" asp-controller="Account" method="post" class="flex flex-col w-1/2 gap-4"> 
+		@Html.AntiForgeryToken()
+		<input asp-for="UserName" placeholder="Enter your Username"class="p-2 border border-gray-400 outline-none"/>
+		<span asp-validation-for="UserName" class="text-red-500 text-sm"></span>
+		<input asp-for="Password" type="password" placeholder="Enter your Password" class="p-2 border border-gray-400 outline-none"/>
+		<span asp-validation-for="Password" class="text-red-500 text-sm"></span>
+		<button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Login</button>
+	</form>
+	<input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"] ?? " /"" />
+</div>
