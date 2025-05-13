@@ -8,17 +8,18 @@
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script>
 		tailwind.config = {
-		theme: {
-		extend: {
-		fontFamily: {
-		raleway: ['Raleway', 'sans-serif'],
-		}
-		}
-		}
+			theme: {
+				extend: {
+					fontFamily: {
+						raleway: ['Raleway', 'sans-serif'],
+					}
+				}
+			}
 		}
 	</script>
+
 	<script>
-		document.addEventListener("DOMContentLoaded", function() {
+		document.addEventListener("DOMContentLoaded", function () {
 			const loc = window.location.pathname;
 			const logoutButton = document.getElementById("logout");
 			if (logoutButton) {
@@ -31,44 +32,163 @@
 		});
 	</script>
 
+	<style>
+		.sidebar-collapsed {
+			width: 8rem !important;
+			overflow: hidden;
+			padding: 20px !important;
+		}
+
+		.main-expanded {
+			margin-left: 0rem !important;
+		}
+
+		.sidebar-collapsed .sidebar-item {
+			flex-direction: column !important;
+		}
+
+		.sidebar-collapsed .sidebar-text {
+			text-align: center;
+			font-size: 1rem !important;
+			margin-top: 0.25rem;
+		}
+
+		.active-sidebar-item {
+			background-color: #d1d5db;
+		}
+		.icon-image{
+			width: 1rem;
+			height: 1rem;
+			transition: transform 0.3s ease;
+		}
+	</style>
 
 	<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet">
 	<link href="https://fonts.cdnfonts.com/css/pp-pangaia" rel="stylesheet">
-
-
 </head>
-<body class="font-raleway bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body class="font-raleway bg-gray-50 text-gray-800 min-h-screen flex">
 
-	<header class="bg-white shadow">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-			<a href="/" class="text-xl font-bold text-blue-600">TodoManager</a>
-
-			<div class="flex flex-row gap-4">
-				@if (Url != null && Context.Request.Path != Url.Action("Create", "Todo"))
-				{
-					<a href="@Url.Action("Create", "Todo")" class="bg-blue-300 text-black p-1 border border-black outline-black hover:bg-blue-400 transition ease-in duration-200 md:p-2 text-xs md:text-l content-center">
-						Create new TODO
-					</a>
-				} 
-				<form asp-action="Logout" asp-controller="Account" method="post">
-					<button class="p-2 bg-red-200 text-black border border-black hover:bg-red-400 transition ease-in duration-200" id="logout">Logout</button>
-				</form>
-			</div>
-
+	<!-- Sidebar -->
+	<aside class="w-64 bg-gray-100 text-black h-screen p-4 fixed lg:relative z-10 transition-all duration-300" id="sidebar">
+		<div class="flex justify-center items-center">
+			<a href="/" class="text-xl font-bold text-blue-400">
+				<img src="/images/plogo.png" class="h-12" id="logo" />
+				<span id="logoText" class="hidden py-6 text-black font-bold text-4xl" style="font-family:'PP Pangaia', sans-serif">TM</span>
+			</a>
+			<button id="sidebarToggle" class="text-white lg:hidden focus:outline-none">
+				<span class="text-2xl">☰</span>
+			</button>
 		</div>
-	</header>
+		<hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-300" id="hrow">
 
+		<nav class="mt-8">
+			<ul>
+				<li>
+					<div class="sidebar-item flex flex-row items-center justify-start hover:bg-gray-300 transition ease-in duration-200 p-1 rounded rounded-1 cursor-pointer"
+					onclick="location.href='@Url.Action("Index","Todo")'"
+					>
+						<img src="@Url.Content("~/images/dashboard.png")" class="h-full" />
+						<a href="@Url.Action("Index", "Todo")" class="sidebar-text block py-2 px-4 text-lg font-sm" style="font-family:'PP Pangaia'">My TODO's</a>
+					</div>
+				</li>
+				<li>
+					<div class="sidebar-item flex flex-row items-center justify-start hover:bg-gray-300 transition ease-in duration-200 p-1 rounded rounded-1 cursor-pointer"
+						 onclick="location.href='@Url.Action("Create", "Todo")'">
+						<img src="@Url.Content("~/images/create.png")" class="h-full" />
+						<a href="@Url.Action("Create", "Todo")" class="sidebar-text block py-2 px-4 text-lg hover:bg-gray-300 transition ease-in duration-200 font-sm" style="font-family:'PP Pangaia', sans-serif">Create TODO</a>
+					</div>
+				</li>
+				<li>
+					<div class="sidebar-item flex flex-row items-center justify-start hover:bg-gray-300 transition ease-in duration-200 p-1 rounded rounded-1 cursor-pointer"
+						 onclick="location.href='@Url.Action("Index", "Todo")'">
+						<img src="@Url.Content("~/images/profile-picture.png")" class="h-full" />
+						<span class="sidebar-text block py-2 px-4 text-lg font-medium" style="font-family:'PP Pangaia', sans-serif">Profile</span>
+					</div>
 
-	<main role="main" class="flex-grow container mx-auto px-4 py-6">
-		@RenderBody()
-	</main>
+				</li>
+				@* <li> *@
+				@* 	<form asp-action="Logout" asp-controller="Account" method="post"> *@
+				@* 		<button class="block py-2 px-4 text-lg hover:bg-gray-700 w-full text-left" id="logout">Logout</button> *@
+				@* 	</form> *@
+				@* </li> *@
+			</ul>
+		</nav>
+	</aside>
 
-	@* <footer class="bg-white border-t mt-auto py-4 text-center text-sm text-gray-500"> *@
-	@*     &copy; @DateTime.Now.Year - TodoManager *@
-	@* </footer> *@
+	<!-- Toggle Button on Sidebar Edge -->
+	<button id="sidebarEdgeToggle" class="fixed top-4 left-64 transform -translate-x-1/2 z-20 bg-gray-200 hover:bg-gray-300 border border-gray-300 p-2 shadow-sm transition">
+		<img id="sidebarToggleIcon" src="/images/double-left.png" alt="Toggle" class="icon-image" />
+	</button>
 
-	<!-- Optional Scripts -->
+	<!-- Main Content -->
+	<div class="flex-grow ml-64 lg:ml-0 transition-all duration-300" id="mainContent">
+		<header class="bg-white shadow transition-all duration-300" id="header">
+			<div class="container mx-auto px-4 py-4 flex justify-end items-center">
+				<div class="flex flex-row gap-4">
+					@if (Url != null && Context.Request.Path != Url.Action("Create", "Todo"))
+					{
+						<a href="@Url.Action("Create", "Todo")" class="bg-blue-300 text-black p-1 border border-black outline-black hover:bg-blue-400 transition ease-in duration-200 md:p-2 text-xs lg:text-lg lg:p-1 content-center">
+							Create new TODO
+						</a>
+					}
+					<form asp-action="Logout" asp-controller="Account" method="post">
+						<button class="p-2 bg-red-200 text-black border border-black hover:bg-red-400 transition ease-in duration-200" id="logout">Logout</button>
+					</form>
+				</div>
+			</div>
+		</header>
+
+		<main role="main" class="flex-grow container mx-auto px-4 py-6">
+			@RenderBody()
+		</main>
+	</div>
+
 	@await RenderSectionAsync("Scripts", required: false)
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const sidebar = document.getElementById("sidebar");
+			const toggleButton = document.getElementById("sidebarEdgeToggle");
+			const toggleIcon = document.getElementById("sidebarToggleIcon");
+			const mainContent = document.getElementById("mainContent");
+			const logo = document.getElementById("logo");
+			const logoText = document.getElementById("logoText");
+			const line = document.getElementById("hrow");
+
+			let isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+
+			function applySidebarState() {
+				sidebar.classList.toggle("sidebar-collapsed", isCollapsed);
+				mainContent.classList.toggle("main-expanded", isCollapsed);
+
+				toggleIcon.src = isCollapsed ? "/images/double-right.png" : "/images/double-left.png";
+				logo.classList.toggle("hidden", isCollapsed);
+				logoText.classList.toggle("hidden", !isCollapsed);
+				line.classList.toggle("my-2", !isCollapsed);
+				line.classList.toggle("my-5", isCollapsed);
+				toggleButton.classList.toggle("left-64", !isCollapsed);
+				toggleButton.classList.toggle("left-32", isCollapsed);
+			}
+
+			// Initial load
+			applySidebarState();
+
+			toggleButton.addEventListener("click", () => {
+				isCollapsed = !isCollapsed;
+				localStorage.setItem("sidebarCollapsed", isCollapsed);
+				applySidebarState();
+			});
+		});
+				document.querySelectorAll('.sidebar-item').forEach(item => {
+			const itemUrl = item.getAttribute('data-url');
+			if (window.location.pathname === itemUrl) {
+				item.classList.add('active-sidebar-item');
+			}
+		});
+
+	</script>
+
+
 </body>
 </html>
